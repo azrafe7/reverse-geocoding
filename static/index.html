@@ -161,15 +161,29 @@
                 <input type="text" min="-180" max="180" id="longitude" name="longitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
             </div>
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md">Reverse Geocode</button>
+            <button id="random-btn" class="bg-blue-400 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md">Random Location</button>
         </form>
         <div id="result" class="mt-4 bg-gray-100 p-4 rounded-md"></div>
     </div>
     <script>
 		const form = document.getElementById('reverse-geocode-form');
+		const randomButton = document.getElementById('random-btn');
 		const resultDiv = document.getElementById('result');
 
+		randomButton.addEventListener('click', async (event) => {
+			event.preventDefault();
+
+			const latEl = document.getElementById('latitude');
+			const lonEl = document.getElementById('longitude');
+			
+			latEl.value = Math.random() * 180 - 90;
+			lonEl.value = Math.random() * 360 - 180;
+		});
+		
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
+
+			resultDiv.innerHTML = '';
 
 			const latitude = parseFloat(document.getElementById('latitude').value);
 			const longitude = parseFloat(document.getElementById('longitude').value);
@@ -195,16 +209,22 @@
 				const json = await response.json();
 				const data = JSON.parse(json);
 
-				resultDiv.innerHTML = `
-					<b>The address is:</b> ${data.display_name}</br></br>
-					<b>City:</b> ${data.address.city}</br>
-					<b>County:</b> ${data.address.county}</br>
-					<b>State:</b> ${data.address.state}</br>
-					<b>Country:</b> ${data.address.country}
-				`;
-				resultDiv.setAttribute('data-json', data)
+				resultDiv.setAttribute('data-json', JSON.stringify(data))
+
+				console.log(data);
+				if (data != null) {
+					resultDiv.innerHTML = `
+						<b>The address is:</b> ${data.display_name}</br></br>
+						<b>City:</b> ${data.address.city}</br>
+						<b>County:</b> ${data.address.county}</br>
+						<b>State:</b> ${data.address.state}</br>
+						<b>Country:</b> ${data.address.country}
+					`;
+				} else {
+					resultDiv.innerHTML = 'No location found';
+				}
 			} catch (error) {
-				resultDiv.textContent = 'Error: ' + error.message;
+				resultDiv.innerHTML = 'Error: ' + error.message;
 			}
 		});
     </script>
