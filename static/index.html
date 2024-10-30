@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reverse Geocode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+		}
+
+		.bg-white {
+			background-color: white;
+		}
+
+		.p-8 {
+			padding: 2rem;
+		}
+
+		.rounded-lg {
+			border-radius: 0.5rem;
+		}
+
+		.shadow-lg {
+			box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+		}
+
+		.w-full {
+			width: 100%;
+		}
+
+		.max-w-md {
+			max-width: 28rem;
+		}
+
+		.text-2xl {
+			font-size: 1.5rem;
+			line-height: 2rem;
+		}
+
+		.font-bold {
+			font-weight: 700;
+		}
+
+		.mb-4 {
+			margin-bottom: 1rem;
+		}
+
+		.space-y-4 > * + * {
+			margin-top: 1rem;
+		}
+
+		.block {
+			display: block;
+		}
+
+		.font-medium {
+			font-weight: 500;
+		}
+
+		.mb-1 {
+			margin-bottom: 0.25rem;
+		}
+
+		.w-full {
+			width: 100%;
+		}
+
+		.border {
+			border-width: 1px;
+		}
+
+		.border-gray-500 {
+			border-color: #6b7280;
+		}
+
+		.rounded-md {
+			border-radius: 0.375rem;
+		}
+
+		.shadow-sm {
+			box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+		}
+
+		.focus\:border-blue-500:focus {
+			border-color: #3b82f6;
+		}
+
+		.focus\:ring-blue-500:focus {
+			--tw-ring-color: #3b82f6;
+		}
+
+		.bg-blue-500 {
+			background-color: #3b82f6;
+		}
+
+		.hover\:bg-blue-600:hover {
+			background-color: #2563eb;
+		}
+
+		.text-white {
+			color: #fff;
+		}
+
+		.font-medium {
+			font-weight: 500;
+		}
+
+		.py-2 {
+			padding-top: 0.5rem;
+			padding-bottom: 0.5rem;
+		}
+
+		.px-4 {
+			padding-left: 1rem;
+			padding-right: 1rem;
+		}
+
+		.rounded-md {
+			border-radius: 0.375rem;
+		}
+
+		.mt-4 {
+			margin-top: 1rem;
+		}
+
+		.bg-gray-100 {
+			background-color: #f3f4f6;
+		}
+
+		.p-4 {
+			padding: 1rem;
+		}
+
+		.rounded-md {
+			border-radius: 0.375rem;
+		}
+		
+		/* Chrome, Safari, Edge, Opera */
+		input::-webkit-outer-spin-button,
+		input::-webkit-inner-spin-button {
+		  -webkit-appearance: none;
+		  margin: 0;
+		}
+
+		/* Firefox */
+		input[type=number] {
+		  -moz-appearance: textfield;
+		}
+	</style>
+</head>
+<body class="flex justify-center items-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h1 class="text-2xl font-bold mb-4">Reverse Geocode</h1>
+        <form id="reverse-geocode-form" class="space-y-4">
+            <div>
+                <label for="latitude" class="block font-medium mb-1">Latitude:</label>
+                <input type="text" min="-90" max="90" id="latitude" name="latitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="longitude" class="block font-medium mb-1">Longitude:</label>
+                <input type="text" min="-180" max="180" id="longitude" name="longitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            </div>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md">Reverse Geocode</button>
+        </form>
+        <div id="result" class="mt-4 bg-gray-100 p-4 rounded-md"></div>
+    </div>
+    <script>
+		const form = document.getElementById('reverse-geocode-form');
+		const resultDiv = document.getElementById('result');
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+
+			const latitude = parseFloat(document.getElementById('latitude').value);
+			const longitude = parseFloat(document.getElementById('longitude').value);
+
+			const formData = {
+				'latitude': latitude, 
+				'longitude': longitude
+			}
+
+			try {
+				const request = {
+					method: 'POST',
+					headers: {"content-type": "application/json"},
+					body: JSON.stringify(formData)
+				}
+				//debugger;
+				const response = await fetch('/reverse_geocode', request);
+
+				if (!response.ok) {
+                    throw new Error(await response.text());
+                }
+
+				const json = await response.json();
+				const data = JSON.parse(json);
+
+				resultDiv.innerHTML = `
+					<b>The address is:</b> ${data.display_name}</br></br>
+					<b>City:</b> ${data.address.city}</br>
+					<b>County:</b> ${data.address.county}</br>
+					<b>State:</b> ${data.address.state}</br>
+					<b>Country:</b> ${data.address.country}
+				`;
+				resultDiv.setAttribute('data-json', data)
+			} catch (error) {
+				resultDiv.textContent = 'Error: ' + error.message;
+			}
+		});
+    </script>
+</body>
+</html>
