@@ -146,6 +146,19 @@
 		input[type=number] {
 		  -moz-appearance: textfield;
 		}
+		#footer {
+			padding-top: 4px;
+			position:absolute; bottom:0px;
+			background-color: orange;
+			width: 100%;
+			text-align: center;
+			font-size: .9em;
+			font-family: monospace;
+		}
+
+		#footer a {
+			text-decoration: underline;
+		}
 	</style>
 </head>
 <body class="flex justify-center items-center h-screen">
@@ -165,6 +178,7 @@
         </form>
         <div id="result" class="mt-4 bg-gray-100 p-4 rounded-md"></div>
     </div>
+	<div id="footer"><b>License:</b> Data © OpenStreetMap contributors, ODbL 1.0. <a href="http://osm.org/copyright"><span>http://osm.org/copyright</span></a></div>
     <script>
 		const form = document.getElementById('reverse-geocode-form');
 		const randomButton = document.getElementById('random-btn');
@@ -216,7 +230,7 @@
 
 				resultDiv.setAttribute('data-json', JSON.stringify(data))
 
-				console.log(data);
+				console.log("data", data);
 				if (data != null) {
 					let addressType = data.addresstype;
 					resultDiv.innerHTML = `
