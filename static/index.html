@@ -167,11 +167,11 @@
         <form id="reverse-geocode-form" class="space-y-4">
             <div>
                 <label for="latitude" class="block font-medium mb-1">Latitude:</label>
-                <input type="text" min="-90" max="90" id="latitude" name="latitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <input type="text" value="42.76666" min="-90" max="90" id="latitude" name="latitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
             </div>
             <div>
                 <label for="longitude" class="block font-medium mb-1">Longitude:</label>
-                <input type="text" min="-180" max="180" id="longitude" name="longitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                <input type="text" value="11.1000" min="-180" max="180" id="longitude" name="longitude" required class="w-full border border-gray-500 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500">
             </div>
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md">Reverse Geocode</button>
             <button id="random-btn" class="bg-blue-400 hover:bg-blue-500 text-white font-medium py-2 px-4 rounded-md">Random Location</button>
@@ -238,8 +238,13 @@
 						<b>${toFirstLetterUpperCase(addressType)}:</b> ${data.address[addressType]}</br>
 						<b>County:</b> ${data.address.county}</br>
 						<b>State:</b> ${data.address.state}</br>
-						<b>Country:</b> ${data.address.country}
+						<b>Country:</b> ${data.address.country}</br>
 					`;
+					//resultDiv.innerHTML += `</br>
+					//	<b>Data:</b></br>
+					//	<pre class="data">${JSON.stringify(data, null, 2)}
+					//	</pre>	
+					//`;
 				} else {
 					resultDiv.innerHTML = 'No location found';
 				}
