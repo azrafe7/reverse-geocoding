@@ -180,6 +180,11 @@
 			lonEl.value = Math.random() * 360 - 180;
 		});
 		
+		function toFirstLetterUpperCase(str) {
+			let res = str.charAt(0).toUpperCase() + str.slice(1);
+			return res;
+		}
+		
 		form.addEventListener('submit', async (event) => {
 			event.preventDefault();
 
@@ -213,9 +218,10 @@
 
 				console.log(data);
 				if (data != null) {
+					let addressType = data.addresstype;
 					resultDiv.innerHTML = `
 						<b>The address is:</b> ${data.display_name}</br></br>
-						<b>City:</b> ${data.address.city}</br>
+						<b>${toFirstLetterUpperCase(addressType)}:</b> ${data.address[addressType]}</br>
 						<b>County:</b> ${data.address.county}</br>
 						<b>State:</b> ${data.address.state}</br>
 						<b>Country:</b> ${data.address.country}
